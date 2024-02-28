@@ -3,6 +3,7 @@ import { SteamComInteractor } from "../utils/steamCommunityInteractor";
 import moment from 'moment';
 import SteamUser from "steam-user";
 import SteamCommunity from "steamcommunity";
+import { StratzInteractor } from "../utils/stratzInteractor";
 
 class ChatCommandsProcessor {   
 
@@ -80,6 +81,70 @@ class ChatCommandsProcessor {
     const message =  "> Doto Bot\nÉ um bot feito para mostrar os counter picks dos heros. Todos os dados são retirados do STRATZ.\n\n\nVERSAO: 1.0\nULTIMO UPDATE: 02/2024\nDOTOBOT@2024"
     return message
   }
+
+  public async getCounterHeroes(args: string[]): Promise<any>{
+    try {
+        const hero = await StratzInteractor.getHeroIdByName(args[0]).catch((err) => {
+            console.log(args[0]);
+            console.log(err);
+        });
+        const heroData: any = await StratzInteractor.getHeroById(parseInt(hero.id)).catch((err) => {
+            console.log(args[0]);
+            console.log(err);
+        });
+    
+        // const bestVsHeroes = heroData.vs.sort((a: any, b: any) => {
+        //     const anticipatedWinRateA = a.synergy; 
+        //     const anticipatedWinRateB = b.synergy;
+        
+        //     const winRateA = a.winCount / a.matchCount;
+        //     const winRateB = b.winCount / b.matchCount;
+        
+        //     const diffA = anticipatedWinRateA - winRateA;
+        //     const diffB = anticipatedWinRateB - winRateB;
+        
+        //     return diffB - diffA;
+        // });
+
+        const badVsHeroes = heroData.vs.sort((a: any, b: any) => {
+            const anticipatedWinRateA = a.synergy; 
+            const anticipatedWinRateB = b.synergy;
+        
+            const winRateA = a.winCount / a.matchCount;
+            const winRateB = b.winCount / b.matchCount;
+        
+            const diffA = anticipatedWinRateA - winRateA;
+            const diffB = anticipatedWinRateB - winRateB;
+        
+            return diffA - diffB;
+        });
+
+        const allHeroes = await StratzInteractor.getAllHeroes().catch((err) => {
+            console.log(args[0]);
+            console.log(err);
+        });
+
+        badVsHeroes.find((hero: any) => {
+            const bestHero = allHeroes.find((item: any) => item.id === hero.heroId2);
+            hero.displayName = bestHero.displayName;
+            hero.shortName = bestHero.shortName;
+        });
+
+        let outputCounterHeroes = `TOP 10 HERO COUNTERS ${hero.displayName.toUpperCase()}:\n`;
+        outputCounterHeroes += badVsHeroes.slice(0, 10).map((heroData: any, index: any) => {
+            const synergyPercentage = Math.abs(heroData.synergy);
+            const winRate = Math.abs((heroData.winCount / heroData.matchCount) * 100);
+            return `\n#${index + 1}: ${heroData.displayName} | winrate: ${winRate.toFixed(2)}% | advantage: ${synergyPercentage.toFixed(2)}%`;
+        }).join('\n');
+        outputCounterHeroes += `\n\nsource -> STRATZ - ${new Date().toLocaleDateString()}`
+        return outputCounterHeroes
+    } catch (error) {
+        console.error("Error get counter heroes:", error);
+        return ""
+    }
+    
+  }
+
 }
 
 export const chatCommandsProcess = new ChatCommandsProcessor();
