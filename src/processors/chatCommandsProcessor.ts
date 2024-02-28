@@ -132,11 +132,12 @@ class ChatCommandsProcessor {
 
         let outputCounterHeroes = `TOP 10 HERO COUNTERS ${hero.displayName.toUpperCase()}:\n`;
         outputCounterHeroes += badVsHeroes.slice(0, 10).map((heroData: any, index: any) => {
-            const synergyPercentage = Math.abs(heroData.synergy);
-            const winRate = Math.abs((heroData.winCount / heroData.matchCount) * 100);
-            return `\n#${index + 1}: ${heroData.displayName} | winrate: ${winRate.toFixed(2)}% | advantage: ${synergyPercentage.toFixed(2)}%`;
+            const synergyPercentage = heroData.synergy;
+            const winRate = (heroData.winCount / heroData.matchCount) * 100;
+            const paddedName = heroData.displayName.padEnd(20); // Adiciona espaços para completar até 20 caracteres
+            return `\n#${index + 1}: ${paddedName} | winrate: ${winRate.toFixed(1)}% | advantage: ${synergyPercentage.toFixed(1)}%`;
         }).join('\n');
-        outputCounterHeroes += `\n\nsource -> STRATZ - ${new Date().toLocaleDateString()}`
+        outputCounterHeroes += `\n\nsource -> STRATZ - ${new Date().toLocaleDateString()}`;
         return outputCounterHeroes
     } catch (error) {
         console.error("Error get counter heroes:", error);

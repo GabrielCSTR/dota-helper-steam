@@ -52,7 +52,7 @@ class MessageHandler {
 
                 case "counter":
                     response = await chatCommandsProcess.getCounterHeroes(args);
-                    format= IFormatTypes.QUOTE;
+                    format= IFormatTypes.CODE;
                     break;
                 default:
                     response = 'Invalid command.n\For help use command: >help';
