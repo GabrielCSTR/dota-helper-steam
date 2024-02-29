@@ -10,6 +10,18 @@ enum IFormatTypes {
     SPOILER = '/spoiler',
     QUOTE   = '/quote',
 }
+
+// enum IMedalTypes {
+//     UNCALIBRATED    = "UNKNOW",
+//     HERALD          = "HERALD",
+//     GUARDIAN        = "GUARDIAN",
+//     CRUSADER        = "CRUSADER",
+//     ARCHON          = "ARCHON",
+//     LEGEND          = "LEGEND",
+//     ANCIENT         = "ANCIENT",
+//     DIVINE          = "DIVINE",
+//     IMMORTAL        = "IMMORTAL"
+// }
 class MessageHandler {
 
     public async processMessage(message: string, nickname: string, steamUserID: any, client: SteamUser, community: SteamCommunity) {
@@ -37,14 +49,17 @@ class MessageHandler {
                     response = await chatCommandsProcess.command1(args);
                     format = IFormatTypes.ME
                     break;
+
                 case "getuserinfo":
                     response = await chatCommandsProcess.getUserInfo(args, community, steamUserID);
                     format = IFormatTypes.CODE;
                     break;
+
                 case "about":
                     response = await chatCommandsProcess.about();
                     format = IFormatTypes.PRE;
                     break;
+
                 case "help":
                     response = await chatCommandsProcess.help();
                     format = IFormatTypes.PRE;
@@ -52,10 +67,21 @@ class MessageHandler {
 
                 case "counter":
                     response = await chatCommandsProcess.getCounterHeroes(args);
-                    format= IFormatTypes.CODE;
+                    format = IFormatTypes.PRE;
                     break;
+
+                case "best":
+                    response = await chatCommandsProcess.getBestHeroesVs(args);
+                    format = IFormatTypes.CODE;
+                    break;
+                    
+                case "meta":
+                    response = await chatCommandsProcess.getCurrentMeta(args);
+                    format = IFormatTypes.CODE;
+                    break;
+
                 default:
-                    response = 'Invalid command.n\For help use command: >help';
+                    response = 'Invalid command.\nFor help use command: >help';
                     format = IFormatTypes.PRE;
                     break;
             }
