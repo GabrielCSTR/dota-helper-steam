@@ -1,8 +1,7 @@
 import axios from "axios";
 import {GET_ALL_HEROES, GET_HERO_BY_ID, GET_META_HEROES} from "./stratzQuery";
-const API_URL = "https://api.stratz.com/graphql";
-const TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdWJqZWN0IjoiZDkzOTNmNWUtZWY0Yy00ZmQ4LWJiNWUtMjBjZGJlNWI0M2Q5IiwiU3RlYW1JZCI6IjcyMTgxNzQ5IiwibmJmIjoxNzAyNTE4MjkzLCJleHAiOjE3MzQwNTQyOTMsImlhdCI6MTcwMjUxODI5MywiaXNzIjoiaHR0cHM6Ly9hcGkuc3RyYXR6LmNvbSJ9.-o3j1zlt8Kiu4xbjGLDymqC_3I1wb9SMqwL_aiTupdA";
+const API_URL = process.env.STRATZ_API   || "";
+const TOKEN   = process.env.STRATZ_TOKEN || "";
 
 export const IMedalTypes = [
     'UNCALIBRATED',
@@ -85,23 +84,9 @@ export class StratzInteractor {
 
    // Função de comparação para a classificação
    public static comparPorcentWin(a: any, b: any) {
-    const porcentWinA =  (a.winCount / a.matchCount) * 100;
-    const porcentWinB =  (b.winCount / b.matchCount) * 100;
-
-    // Compara pela porcentagem de vitórias
-    if (porcentWinA < porcentWinB) {
-      return 1;
-    } else if (porcentWinA > porcentWinB) {
-      return -1;
-    }
-
-    // Se a porcentagem de vitórias for igual, compara pelo heroId
-    if (a.heroId < b.heroId) {
-      return -1;
-    } else if (a.heroId > b.heroId) {
-      return 1;
-    }
-
-    return 0; // Se a porcentagem de vitórias e o heroId forem iguais, mantém a ordem original
+    const porcentWinA = (a.winCount / a.matchCount) * 100;
+    const porcentWinB = (b.winCount / b.matchCount) * 100;
+  
+    return porcentWinB - porcentWinA || a.heroId - b.heroId;
   }
 }

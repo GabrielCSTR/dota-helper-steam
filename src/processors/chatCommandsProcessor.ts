@@ -130,8 +130,7 @@ class ChatCommandsProcessor {
           const formattedValue = `${value.synergy.toFixed(2)}%`;
           return acc !== "" ? `${acc}\n${formattedValue}` : formattedValue;
         }, "");
-        console.log("FAFAFA", worstHeroes);
-        
+
         let outputCounterHeroes = `TOP 10 HERO COUNTERS ${hero.displayName.toUpperCase()}:\n`;
         outputCounterHeroes += badVsHeroes.slice(0, 10).map((heroData: any, index: any) => {
             const synergyPercentage = heroData.synergy;
@@ -207,7 +206,7 @@ class ChatCommandsProcessor {
 
   public async getCurrentMeta(args: string[]): Promise<any>{
 
-    if(!IMedalTypes.includes(args[0].toUpperCase())){
+    if(!IMedalTypes.includes(args[0]?.toUpperCase())){
       return `Invalid rank medal '${args[0]}'.\nPlease enter a valid medal name`
     }
 
@@ -263,8 +262,6 @@ class ChatCommandsProcessor {
     }).join('\n');
 
     outputMetaWeek += `\n\nsource: Stratz • ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`;
-    // console.log("META HEROES", metaWeekHeroes.slice(0, 10)); 
-
     return outputMetaWeek
   }
 }

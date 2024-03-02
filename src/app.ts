@@ -7,8 +7,8 @@ import { ClientLoginController } from "./controller/steamCliController";
 (async () => {
     try {
         await login.processLogin();
-        const scc = new ClientLoginController(login);
-        scc.start();
+        const steamManager = new ClientLoginController(login);
+        steamManager.onReady();
     } catch (err) {
         console.error(err);
     }
