@@ -4,6 +4,7 @@ import moment from 'moment';
 import SteamUser from "steam-user";
 import SteamCommunity from "steamcommunity";
 import { IMedalTypes, StratzInteractor } from "../utils/stratzInteractor";
+import { getNameHero } from "../utils";
 
 class ChatCommandsProcessor {   
 
@@ -51,7 +52,6 @@ class ChatCommandsProcessor {
   }
 
   public async getAvatar(args: string[], community: SteamCommunity, userID: SteamUser) {
-    let userJson: any;
     let user: any;
 
     if (args.length == 0) {
@@ -73,7 +73,26 @@ class ChatCommandsProcessor {
   }
 
   public help(){
-    const message =  "Lista de comandos:\n*1 -> !dota counters + 'nome hero' -> ex: !dota counter viper\n*2 -> !contato\n*3 -> !sobre"
+    const message = `
+    Lista de comandos:
+1. >counter + 'nome hero' - Exemplo: >counter viper
+    Retorna os heróis que são counters do herói especificado.
+
+2. >best + 'nome hero' - Exemplo: >best axe
+    Retorna os heróis que o herói especificado é bom contra contra.
+
+3. >meta + 'medalha' - Exemplo: >meta immortal
+    Retorna meta atual da meldalha informada.
+
+4. >getuserinfo + 'user SteamID64
+    Retorna informações do user informado.
+
+5. >contact
+    Retorna informações de contato para suporte ou outras questões.
+
+6. >about
+    Retorna informações sobre este bot e seus objetivos.
+`;
     return message
   }
 
@@ -84,15 +103,19 @@ class ChatCommandsProcessor {
 
   public async getCounterHeroes(args: string[]): Promise<any>{
     try {
+        if(!args[0]){
+          return "Please informe hero name!\nFor help use command: >help"
+        }
 
-        const hero = await StratzInteractor.getHeroIdByName(args[0]).catch((err) => {
+        const heroName = await getNameHero(args[0]);
+        if(!heroName){
+          return "Hero name invalid!\nex: >counter axe\nFor help use command: >help"
+        }
+
+        const hero = await StratzInteractor.getHeroIdByName(heroName.name).catch((err) => {
             console.log(args[0]);
             console.log(err);
         });
-
-        if(!hero){
-          return "Hero name invalid!\nex: >counter axe"
-        }
 
         const heroData: any = await StratzInteractor.getHeroById(parseInt(hero.id)).catch((err) => {
             console.log(args[0]);
@@ -149,14 +172,19 @@ class ChatCommandsProcessor {
 
   public async getBestHeroesVs(args: string[]) : Promise<any>{
     try {
-      const hero = await StratzInteractor.getHeroIdByName(args[0]).catch((err) => {
+      if(!args[0]){
+        return "Please informe hero name!\nFor help use command: >help"
+      }
+
+      const heroName = await getNameHero(args[0]);
+      if(!heroName){
+        return "Hero name invalid!\nex: >counter axe\nFor help use command: >help"
+      }
+
+      const hero = await StratzInteractor.getHeroIdByName(heroName.name).catch((err) => {
           console.log(args[0]);
           console.log(err);
       });
-
-      if(!hero){
-        return "Hero name invalid!\nex: >best axe"
-      }
 
       const heroData: any = await StratzInteractor.getHeroById(parseInt(hero.id)).catch((err) => {
           console.log(args[0]);
@@ -206,8 +234,12 @@ class ChatCommandsProcessor {
 
   public async getCurrentMeta(args: string[]): Promise<any>{
 
+    if(!args[0]){
+      return "Please informe medal!"
+    }
+
     if(!IMedalTypes.includes(args[0]?.toUpperCase())){
-      return `Invalid rank medal '${args[0]}'.\nPlease enter a valid medal name`
+      return `Invalid rank medal '${args[0]}'.\nPlease enter a valid medal name\nFor help use command: >help`
     }
 
     // get meta heroes week
