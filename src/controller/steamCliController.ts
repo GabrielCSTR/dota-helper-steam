@@ -4,6 +4,7 @@ import { Login } from "../config/login";
 import { SteamComInteractor } from "../utils/steamCommunityInteractor";
 import SteamCommunity, { EFriendRelationship } from "steamcommunity";
 import { messageHandler } from "../handlers/messageHandler";
+import { logHandler } from "../utils/logHandler";
 
 export class ClientLoginController {
   public client: SteamUser;
@@ -20,7 +21,7 @@ export class ClientLoginController {
 
   onReady() {
     this.client.on("loggedOn", () => {
-      console.log('Bot conectado ID: ' + this.client?.steamID?.getSteam3RenderedID(),);
+      logHandler.log('info', 'Bot conectado ID: ' + this.client?.steamID?.getSteam3RenderedID());
       // Set status and game to play.
       this.client.setPersona(SteamUser.EPersonaState.LookingToPlay, process.env.BOT_STEAM_NAME);
       this.client.gamesPlayed(570); // playing dota 2
@@ -63,7 +64,8 @@ export class ClientLoginController {
           }
           
           if ((this.client.myFriends[steamID64] as number) === EFriendRelationship.RequestRecipient) {
-              console.log("USER PEDDING ADD:", steamID64);
+              logHandler.log('info', `USER PEDDING ADD: ${steamID64}`);
+              
               // relation
               // this.respondToFriendRequest(steamID64);
           }
@@ -74,8 +76,7 @@ export class ClientLoginController {
     this.client.on("friendRelationship", async (steamID: SteamID, relationship: number) => {
 
       if (relationship === EFriendRelationship.RequestRecipient) {
-        
-        console.log("NEW USER REQUEST ADD:", steamID);
+        logHandler.log('info',`NEW USER REQUEST ADD: ${steamID}`);
       }
     });
   }

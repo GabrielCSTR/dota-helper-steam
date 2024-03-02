@@ -28,6 +28,7 @@
     "insults": "^0.1.3",
     "moment": "^2.30.1",
     "steam-user": "^5.0.8",
-    "steamcommunity": "^3.48.2"
+    "steamcommunity": "^3.48.2",
+    "winston": "^3.11.0"
   }
 }
