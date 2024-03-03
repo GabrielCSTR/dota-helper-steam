@@ -101,6 +101,16 @@ class ChatCommandsProcessor {
     return message
   }
 
+  public contact(){
+    const message = `
+    > Dota Helper developed by Gabriel C. (xStRDoto)\n
+Contact developed:
+  > E-mail: gabriel.developed@gmail.com
+  > Steam: https://steamcommunity.com/id/xstrdoto
+`;
+    return message
+  }
+
   public async getCounterHeroes(args: string[]): Promise<any>{
     try {
         if(!args[0]){

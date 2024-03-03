@@ -25,13 +25,14 @@ enum IFormatTypes {
 class MessageHandler {
     // commands cooldowns in secounds
   private commandCooldowns: { [command: string]: number } = {
-    command: 30, 
-    getuserinfo: 60, 
-    about: 10, 
-    help: 10, 
-    counter: 15, 
-    best: 20, 
-    meta: 30 
+    command: 30,
+    getuserinfo: 60,
+    about: 10,
+    help: 10,
+    counter: 15,
+    best: 20,
+    meta: 30 ,
+    contact: 10
   };
 
   private commandLastUsage: { [command: string]: number } = {};
@@ -95,10 +96,7 @@ class MessageHandler {
             format = IFormatTypes.PRE;
             break;
           case "contact":
-            response = `> Dota Helper developed by Gabriel C. (xStRDoto)\n
-Contact developed:
-  > E-mail: gabriel.developed@gmail.com
-  > Steam: https://steamcommunity.com/id/xstrdoto/`
+            response = await chatCommandsProcess.contact();
             format = IFormatTypes.PRE;
             break;
           case "counter":
