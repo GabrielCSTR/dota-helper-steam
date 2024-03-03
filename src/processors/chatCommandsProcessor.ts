@@ -79,7 +79,7 @@ class ChatCommandsProcessor {
     Retorna os heróis que são counters do herói especificado.
 
 2. >best + 'nome hero' - Exemplo: >best axe
-    Retorna os heróis que o herói especificado é bom contra contra.
+    Retorna os heróis que o herói especificado é bom contra.
 
 3. >meta + 'medalha' - Exemplo: >meta immortal
     Retorna meta atual da meldalha informada.
@@ -88,10 +88,10 @@ class ChatCommandsProcessor {
     Retorna informações do user informado.
 
 5. >contact
-    Retorna informações de contato para suporte ou outras questões.
+    Retorna informçãoes do desenvolvedor do bot
 
 6. >about
-    Retorna informações sobre este bot e seus objetivos.
+    Dota 2 Helper, é um bot steam que ajuda a saber sobre informações de heroes ou players de dota2!
 `;
     return message
   }

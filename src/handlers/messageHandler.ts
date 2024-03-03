@@ -94,7 +94,13 @@ class MessageHandler {
             response = await chatCommandsProcess.help();
             format = IFormatTypes.PRE;
             break;
-
+          case "contact":
+            response = `> Dota Helper developed by Gabriel C. (xStRDoto)\n
+Contact developed:
+  > E-mail: gabriel.developed@gmail.com
+  > Steam: https://steamcommunity.com/id/xstrdoto/`
+            format = IFormatTypes.PRE;
+            break;
           case "counter":
             response = await chatCommandsProcess.getCounterHeroes(args);
             format = IFormatTypes.PRE;
