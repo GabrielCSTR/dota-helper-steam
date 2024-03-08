@@ -64,10 +64,7 @@ export class ClientLoginController {
           }
           
           if ((this.client.myFriends[steamID64] as number) === EFriendRelationship.RequestRecipient) {
-              logHandler.log('info', `USER PEDDING ADD: ${steamID64}`);
-              
-              // relation
-              // this.respondToFriendRequest(steamID64);
+              this.respondToFriendRequest(steamID64);
           }
       }
     });
@@ -77,7 +74,25 @@ export class ClientLoginController {
 
       if (relationship === EFriendRelationship.RequestRecipient) {
         logHandler.log('info',`NEW USER REQUEST ADD: ${steamID}`);
+        const steamID64 = typeof steamID === 'string' ? steamID : steamID.getSteamID64();
+        this.respondToFriendRequest(steamID64);
       }
     });
+  }
+
+  respondToFriendRequest(steamID: string){
+    logHandler.log('info', `USER PEDDING ADD: ${steamID}`);
+    logHandler.info(`Accepting friend request from ${steamID}...`);
+    this.client.addFriend(steamID, err => {
+      if (err) {
+        logHandler.warn(`Failed to accept friend request from ${steamID}: `, err);
+          return;
+      }
+      logHandler.debug('Friend request has been accepted');
+      setTimeout(() => {
+        const message = `/code ✅ Olá, seja bem-vindo(a). Eu sou o bot Dota Helper, Caso não me conheça use o comando >help para saber oque eu posso fazer!`
+        this.client.chat.sendFriendMessage(steamID, message)
+      }, 2000);
+  });
   }
 }
